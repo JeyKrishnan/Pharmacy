@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Orders</title>
+ 
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f9f9f9, #e3f2fd);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .success-banner {
+      background: linear-gradient(90deg, #28a745, #20c997);
+      color: white;
+      padding: 14px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    h2 {
+      color: #007bff;
+      font-weight: 700;
+    }
+    .order-card {
+      border-radius: 15px;
+      background: #ffffff;
+      border: 2px solid #007bff;
+      margin-bottom: 30px;
+    }
+    .table thead {
+      background: linear-gradient(90deg, #007bff, #6610f2);
+      color: #fff;
+    }
+    .table tbody tr:hover {
+      background-color: #f1f9ff;
+      transition: 0.3s;
+    }
+    .btn-success {
+      background: linear-gradient(90deg, #28a745, #85e085);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+    }
+    .btn-success:hover {
+      background: linear-gradient(90deg, #85e085, #28a745);
+      transform: scale(1.05);
+    }
+    #welcomeUser {
+            font-size: 20px;
+            font-weight: 600;
+        }
+  </style>
+</head>
+ 
+<body>
+<div id="sidebarContainer"></div>
+ 
+<script>
+  $("#sidebarContainer").load("../Shared/sidebar.html");
+</script>
+ 
+<div class="content">
+  <!-- Verification Successful Banner -->
+  <div class="success-banner">
+    ✔ Verification Successful! Your orders are displayed below.
+  </div>
+ 
+  <div class="container mt-4">
+    <h2 class="mb-3 text-center">💊 My Orders</h2>
+ 
+    <!-- Active Orders -->
+    <div class="card shadow order-card">
+      <div class="card-body">
+        <h4 class="mb-3 text-primary" id="welcomeUser"></h4>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>Medicine Name</th>
+              <th>Price (₹)</th>
+              <th>Quantity</th>
+              <th>Expected Delivery</th>
+            </tr>
+          </thead>
+          <tbody id="orderTable">
+            <!-- Active orders will be inserted using jQuery -->
+          </tbody>
+        </table>
+        <div class="text-center mt-3">
+          <button class="btn btn-success btn-lg" id="payBtn">
+            Pay 💳
+          </button>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Order History -->
+    <div class="card shadow order-card">
+      <div class="card-body">
+        <h4 class="mb-3 text-secondary">📜 Order History</h4>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>Medicine Name</th>
+              <th>Price (₹)</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th>Delivered On</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable">
+            <!-- Past orders will be inserted using jQuery -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- Toast Notification -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11"> 
+<div id="paymentToast" class="toast align-items-center text-bg-success border-0" role="alert"data-bs-autohide="true" data-bs-delay="2000">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage">
+        Payment notification here
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+ 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ 
+<script>
+  // Active orders
+  var activeOrders = [
+    { medicine: "Paracetamol 650mg 💊", price: 120, quantity: 1, delivery: "30 Dec 2025 🚚" },
+    { medicine: "Aspirin 500mg 💊", price: 150, quantity: 1, delivery: "1 Jan 2026 🚚" },
+    { medicine: "Vitamin Injection", price: 500, quantity: 2, delivery: "1 Jan 2026 🚚" }
+  ];
+ 
+  // Order history
+  var historyOrders = [
+    { medicine: "Cough Syrup 100ml 🧴", price: 90, quantity: 1, status: "Delivered ✅", delivered: "01 Dec 2025" },
+    { medicine: "Iron Tablets 💊", price: 200, quantity: 2, status: "Delivered ✅", delivered: "28 Nov 2025" },
+    { medicine: "Calcium Supplement 🦴", price: 180, quantity: 1, status: "Canceled ❌", delivered: "-" }
+  ];
+ 
+  $(document).ready(function () {
+    var activeHTML = "";
+    activeOrders.forEach(function (order) {
+      activeHTML += `
+        <tr>
+          <td>${order.medicine}</td>
+          <td>${order.price}</td>
+          <td>${order.quantity}</td>
+          <td>${order.delivery}</td>
+        </tr>
+      `;
+    });
+    $("#orderTable").html(activeHTML);
+ 
+    var historyHTML = "";
+    historyOrders.forEach(function (order) {
+      historyHTML += `
+        <tr>
+          <td>${order.medicine}</td>
+          <td>${order.price}</td>
+          <td>${order.quantity}</td>
+          <td>${order.status}</td>
+          <td>${order.delivered}</td>
+        </tr>
+      `;
+    });
+    $("#historyTable").html(historyHTML);
+    let user = localStorage.getItem("currentUser");
+    if (user) {
+        document.getElementById("welcomeUser").innerText = "👤 " + user;
+    }
+    // Payment button functionality with Toast
+    
+$("#payBtn").click(function () {
+  var total = 0;
+  activeOrders.forEach(function(order) {
+    total += order.price * order.quantity;
+  });
+
+  $("#toastMessage").text("Proceeding to payment for " + user + ". Total Amount: ₹" + total);
+
+  var toastEl = document.getElementById('paymentToast');
+  var toast = new bootstrap.Toast(toastEl);
+
+  // When the toast finishes (auto-hides), navigate
+  toastEl.addEventListener('hidden.bs.toast', function () {
+    window.location.href = "../Payment/billing.html";
+  });
+
+  toast.show();
+});
+  });
+</script>
+ 
+</body>
+</html>

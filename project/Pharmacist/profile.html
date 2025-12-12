@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prescriptions</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="assets/data/sample-data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/scripts.js"></script>
+
+
+    <style>
+        :root {
+            --navy: #07245a;
+            --royal: #0a3d91;
+            --sky: #dff4ff;
+            --accent: #5eb7f7;
+            --muted: #c9d8ef;
+            --white: #ffffff;
+            --text: #07245a;
+        }
+ 
+        body {
+            margin: 0;
+            font-family: system-ui, "Segoe UI";
+            background: linear-gradient(180deg, var(--sky), #fff 85%);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+ 
+        
+ 
+        .main {
+            margin-left: 260px;
+            padding: 30px;
+            width: 100%;
+        }
+ 
+        .panel {
+            background: #fff;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 24px rgba(7, 36, 90, 0.06);
+        }
+ 
+        .page-title {
+            color: var(--navy);
+            font-weight: 700;
+        }
+ 
+        .readonly-input {
+            background: #f2f6ff;
+            border: 1px solid var(--muted);
+        }
+    </style>
+ 
+</head>
+<body>
+
+<aside id="sidebar" aria-label="Sidebar"></aside>
+ 
+    <!-- Main -->
+    <main class="main">
+        <h2 class="page-title mb-4">My Profile</h2>
+ 
+        <section class="panel mb-4">
+            <h5 class="fw-bold mb-3">Pharmacist Information</h5>
+ 
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="pharmaName" value="John David" class="form-control" readonly>
+                </div>
+ 
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email (readonly)</label>
+                    <input type="email" id="pharmaEmail" value="pharmacist@example.com" class="form-control readonly-input" readonly>
+                </div>
+ 
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="pharmaUser" value="john_david" class="form-control" readonly>
+                </div>
+            </div>
+        </section>
+ 
+        <section class="panel">
+            <h5 class="fw-bold mb-3">Change Password</h5>
+ 
+            <form id="passwordForm">
+                <div class="mb-3">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-control" required>
+                </div>
+ 
+                <div class="mb-3">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-control" required minlength="6">
+                </div>
+ 
+                <div class="mb-3">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" required minlength="6">
+                </div>
+ 
+                <button class="btn btn-primary" style="background:var(--royal);border:none;">Update Password</button>
+            </form>
+        </section>
+ 
+    </main>
+ 
+<script>
+  $("#sidebar").load("components/sidebar.html", () => {
+    $("a[href='profile.html']").addClass("active");
+  });
+  
+  loadProfile();
+</script>
+
+</body>
+</html>

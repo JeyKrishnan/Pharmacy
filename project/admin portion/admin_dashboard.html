@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="admin_styles.css">
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-brand">
+                <h3><i class="fas fa-prescription-bottle"></i> Pharmacy Admin</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a class="nav-link active" data-section="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a class="nav-link" data-section="pharmacist"><i class="fas fa-user-nurse"></i> Pharmacists</a></li>
+                <!-- <li><a class="nav-link" data-section="users"><i class="fas fa-users"></i> Users</a></li> -->
+                <li><a class="nav-link" data-section="payments"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li><a class="nav-link" data-section="analytics"><i class="fas fa-chart-pie"></i> Analytics</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <div class="header">
+                    <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>Total Users</h5>
+                            <h2 id="totalUsers">100</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>Total Payments</h5>
+                            <h2 id="totalPayments">5</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>Total Revenue</h5>
+                            <h2><span class="rupee-symbol">₹</span><span id="totalRevenue">8000</span></h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <h5>Active Pharmacists</h5>
+                            <h2 id="totalPharmacists">0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pharmacist Section -->
+            <div id="pharmacist" class="section">
+                <div class="header">
+                    <h1><i class="fas fa-user-nurse"></i> Pharmacist Management</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pharmacistModal">
+                        <i class="fas fa-plus"></i> Add Pharmacist
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-header">Pharmacist List</div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Specialization</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pharmacistTableBody">
+                                <!-- Data filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <!-- <div id="users" class="section">
+                <div class="header">
+                    <h1><i class="fas fa-users"></i> User Management</h1>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userModal">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-header">User List</div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>City</th>
+                                    <th>Payment Method</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Payments Section -->
+            <div id="payments" class="section">
+                <div class="header">
+                    <h1><i class="fas fa-credit-card"></i> Payment History</h1>
+                    <button class="btn btn-primary" onclick="syncPaymentData()">
+                        <i class="fas fa-sync"></i> Refresh Payments
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-header">All Payments</div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Product Type</th>
+                                    <th>Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentTableBody">
+                                <!-- Data filled by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="section">
+                <div class="header">
+                    <h1><i class="fas fa-chart-pie"></i> Sales Analytics</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Sales by Product Type</div>
+                            <div class="card-body">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">Revenue Trend</div>
+                            <div class="card-body">
+                                <div id="revenueTrend">
+                                    <p><strong>Total Revenue:</strong> <span class="rupee-symbol">₹</span><span id="analyticsRevenue">80000</span></p>
+                                    <p><strong>Avg Transaction:</strong> <span class="rupee-symbol">₹</span><span id="avgTransaction">100000</span></p>
+                                    <!-- <p><strong>Payment Methods:</strong></p> -->
+                                    <div id="paymentMethodStats"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pharmacist Modal -->
+    <div class="modal fade" id="pharmacistModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add/Edit Pharmacist</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="pharmacistForm">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" id="pharmacistName" required>
+                        </div>
+                        
+                            <!-- Email Field -->
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="pharmacistEmail" required>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" id="pharmacistPassword" required>
+                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Specialization</label>
+                            <input type="text" class="form-control" id="pharmacistSpecialization" placeholder="e.g., Clinical Pharmacy">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="pharmacistPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-control" id="pharmacistStatus">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="savePharmaciist()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add/Edit User</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" id="userName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="userEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="userPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="userPhone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" id="userCity" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-control" id="userPaymentMethod">
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="UPI">UPI</option>
+                                <option value="Net Banking">Net Banking</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" id="userAddress" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="admin_script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Support</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    :root {
+      --brand-blue: #0d6efd;
+      --bg-body: #f5f7fb;
+      --card-bg: #ffffff;
+      --text-main: #222;
+      --text-muted: #6c757d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      min-width: 320px;
+    }
+
+    /* Layout (sidebar + main) */
+    .layout { display: flex; min-height: 100vh; }
+    .main { flex: 1; padding: 24px 32px; margin-left: 260px; }
+    .main-inner { max-width: 960px; margin: 0 auto; }
+
+    /* Page header (boosted with Bootstrap classes for spacing) */
+    .page-header { margin-bottom: 20px; }
+    .page-title { font-size: 28px; font-weight: 600; margin: 0; }
+
+    /* Cards (keep your look, work fine with .card Bootstrap structure) */
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      border: none; /* override Bootstrap's default border */
+    }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+
+    /* User info section in Create Ticket */
+    .user-box {
+      display: flex; gap: 16px; align-items: center;
+      padding: 14px 18px; border-radius: 10px; background: #eef5ff; margin-bottom: 18px;
+    }
+    .user-avatar {
+      width: 44px; height: 44px; border-radius: 999px;
+      background: var(--brand-blue); color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 18px; flex-shrink: 0;
+    }
+    .user-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 24px; width: 100%;
+    }
+    .user-item-label { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
+    .user-item-value { font-size: 14px; font-weight: 500; }
+
+    /* Form */
+    .form-row { display: flex; flex-direction: column; margin-bottom: 14px; }
+    .form-label { font-size: 14px; margin-bottom: 6px; }
+    textarea {
+      width: 100%; padding: 8px 10px; border-radius: 6px; border: 1px solid #ced4da; font: inherit;
+      resize: vertical; min-height: 90px; background: #fff;
+    }
+    .form-help { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    .btn { border: none; border-radius: 6px; padding: 8px 16px; font-size: 14px; cursor: pointer; }
+    .btn-primary { background: var(--brand-blue); color: #fff; }
+    .btn-primary:hover { filter: brightness(0.95); box-shadow: 0 4px 10px rgba(13,110,253,0.25); }
+
+    /* Tickets table */
+    .ticket-header-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+    .ticket-count { font-size: 13px; color: var(--text-muted); }
+    .table-wrapper { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
+    thead { background: #f1f3f5; }
+    th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+
+    .badge-open, .badge-resolved {
+      display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px;
+    }
+    .badge-open { background: #fff3cd; color: #664d03; }
+    .badge-resolved { background: #d1e7dd; color: #0f5132; }
+
+    .text-muted { color: var(--text-muted); }
+
+    /* Mobile sidebar button */
+    #toggleSidebar {
+      display: none; position: fixed; top: 10px; left: 10px; z-index: 1100;
+      font-size: 26px; padding: 6px 10px; border-radius: 6px;
+      background: var(--brand-blue); color: #fff; cursor: pointer;
+    }
+    #welcomeUser {
+            font-size: 20px;
+            font-weight: 600;
+        }
+    /* subtle hover for rows */
+    tbody tr:hover { background-color: #f8f9fa; transition: background-color 0.2s ease; }
+
+    /* --------- RESPONSIVE --------- */
+    @media (max-width: 1024px) { .main { padding: 20px 20px; } }
+    @media (max-width: 768px) {
+      .layout { display: block; }
+      .main { margin-left: 0; padding: 80px 16px 24px; }
+      .main-inner { max-width: 100%; }
+      #toggleSidebar { display: block; }
+      #welcomeUser { font-size: 20px; font-weight: 600; }
+      .sidebar { position: fixed; top: 0; left: -260px; height: 100vh; z-index: 1000; transition: left 0.25s ease; }
+      .sidebar.active { left: 0; }
+      .user-grid { grid-template-columns: 1fr; gap: 10px 16px; }
+      .ticket-header-row { flex-direction: column; align-items: flex-start; }
+      table { font-size: 13px; }
+    }
+    @media (max-width: 480px) {
+      .page-title { font-size: 22px; }
+      .card { padding: 16px 14px; }
+    }
+
+    /* spinner for submit */
+    .spinner-border-sm {
+      width: 1rem; height: 1rem; border-width: .2em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile sidebar toggle -->
+  <div id="sidebarContainer"></div>
+<script>
+    $("#sidebarContainer").load("../Shared/sidebar.html");
+</script>
+
+  <div class="layout">
+
+    <main class="main">
+      <div class="main-inner">
+        <!-- Header -->
+        <header class="page-header">
+          <h1 class="page-title d-flex align-items-center gap-2">
+            <i class="bi bi-life-preserver text-primary"></i>
+            Customer Support
+          </h1>
+        </header>
+
+        <!-- Create Ticket -->
+        <section class="card">
+          <h2 class="card-title d-flex align-items-center gap-2">
+            <i class="bi bi-plus-circle text-primary"></i>
+            Create Ticket
+          </h2>
+
+          <!-- USER INFO BOX -->
+          <div class="user-box">
+            <div class="user-avatar" id="userInitials">CU</div>
+            <div class="user-grid">
+              <div class="user-item">
+                <div class="user-item-label">Username</div>
+                <div class="user-item-value" id="currentUsername">customer01</div>
+              </div>
+              <div class="user-item">
+                <div class="user-item-label">Customer Name</div>
+                <div class="user-item-value" id="welcomeUser"></div>
+              </div>
+              <div class="user-item">
+                <div class="user-item-label">Customer ID</div>
+                <div class="user-item-value" id="currentUserId">CUST-1001</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ISSUE FORM -->
+          <form id="ticketForm" class="needs-validation" novalidate>
+            <div class="form-row">
+              <label class="form-label" for="issueDescription">Issue Description</label>
+              <textarea id="issueDescription" class="form-control" placeholder="Describe your problem (e.g., wrong medicine delivered, payment issue, dosage clarification...)" required></textarea>
+              <div class="invalid-feedback">Please provide a brief description.</div>
+              <div class="form-help">This description will be sent to the pharmacist.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary d-inline-flex align-items-center gap-2" id="submitBtn">
+              <i class="bi bi-send"></i>
+              <span>Raise Ticket</span>
+              <span class="spinner-border spinner-border-sm ms-2 d-none" id="submitSpinner" role="status" aria-hidden="true"></span>
+            </button>
+          </form>
+        </section>
+
+        <!-- Tickets table -->
+        <section class="card">
+          <div class="ticket-header-row">
+            <h2 class="card-title mb-0 d-flex align-items-center gap-2">
+              <i class="bi bi-ticket-detailed text-primary"></i>
+              Your Tickets
+            </h2>
+            <span class="ticket-count"><span id="ticketCount">0</span> total</span>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Ticket ID</th>
+                  <th scope="col">Customer ID</th>
+                  <th scope="col">Issue</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsBody">
+                <!-- Example row:
+                <tr>
+                  <td>TK-0001</td>
+                  <td>CUST-1001</td>
+                  <td>Payment failed</td>
+                  <td><span class="badge-open"><i class="bi bi-exclamation-circle"></i> Open</span></td>
+                </tr>
+                -->
+              </tbody>
+            </table>
+          </div>
+
+          <p id="emptyState" class="text-muted mt-2">
+            No tickets yet. Raise your first ticket above.
+          </p>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast container -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="bi bi-check-circle me-2"></i>Ticket created successfully!
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Page interactions -->
+  <script>
+    // Sidebar toggle for mobile
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.querySelector('.sidebar');
+    if (toggleBtn && sidebar) {
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+      });
+    }
+
+    // Demo: populate customer name initials dynamically (optional)
+    const welcomeUser = document.getElementById('welcomeUser');
+    const userInitials = document.getElementById('userInitials');
+    const currentUsername = document.getElementById('currentUsername')?.textContent?.trim() || 'Customer';
+    // You can replace this with real user data:
+    const customerName = 'Chris Umbra';
+    if (welcomeUser) welcomeUser.textContent = customerName;
+    if (userInitials) userInitials.textContent = customerName.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase();
+
+    // Form submission with spinner and toast
+    const ticketForm = document.getElementById('ticketForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const ticketsBody = document.getElementById('ticketsBody');
+    const ticketCount = document.getElementById('ticketCount');
+    const emptyState = document.getElementById('emptyState');
+    const successToastEl = document.getElementById('successToast');
+    const successToast = successToastEl ? new bootstrap.Toast(successToastEl) : null;
+
+    // simple ticket id generator
+    let counter = 1;
+    function nextTicketId() {
+      const id = String(counter).padStart(4, '0');
+      counter++;
+      return `TK-${id}`;
+    }
+
+    if (ticketForm) {
+      ticketForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // native validation
+        if (!ticketForm.checkValidity()) {
+          ticketForm.classList.add('was-validated');
+          return;
+        }
+
+        // show spinner
+        submitSpinner.classList.remove('d-none');
+        submitBtn.setAttribute('disabled', 'disabled');
+
+        // simulate async action
+        setTimeout(() => {
+          const desc = document.getElementById('issueDescription').value.trim();
+          const custId = document.getElementById('currentUserId').textContent.trim();
+          const tId = nextTicketId();
+
+          // add row
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${tId}</td>
+            <td>${custId}</td>
+            <td>${desc}</td>
+            <td><span class="badge-open"><i class="bi bi-exclamation-circle"></i> Open</span></td>
+          `;
+          ticketsBody.appendChild(tr);
+
+          // update counters / empty state
+          const total = ticketsBody.querySelectorAll('tr').length;
+          ticketCount.textContent = total;
+          if (total > 0) emptyState.classList.add('d-none');
+
+          // reset form
+          ticketForm.reset();
+          ticketForm.classList.remove('was-validated');
+
+          // toast
+          if (successToast) successToast.show();
+
+          // hide spinner
+          submitSpinner.classList.add('d-none');
+          submitBtn.removeAttribute('disabled');
+        }, 800);
+      });
+    }
+    let user = localStorage.getItem("currentUser");
+    if (user) {
+        document.getElementById("welcomeUser").innerText = "" + user;
+    } else {
+        document.getElementById("welcomeUser").innerText = "Welcome, Guest";
+    }
+    </script>
+  </script>
+</body>
