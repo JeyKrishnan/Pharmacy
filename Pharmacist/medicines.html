@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Medicines</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <style>
+    
+ body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, var(--sky), #fff 85%);
+      color: var(--text);
+      display:flex;
+      min-height:100vh;
+    }
+    /* Main content */
+    .main {
+      margin-left:260px;
+      padding:28px;
+      width:100%;
+    }
+    .page-title { font-size:1.25rem; font-weight:700; color:var(--navy); margin:0 0 6px 0; }
+ 
+    /* Card */
+    .panel {
+      background: #fff;
+      border-radius:12px;
+      padding:16px;
+      box-shadow: 0 8px 24px rgba(7,36,90,0.04);
+      border:1px solid rgba(10,61,145,0.04);
+    }
+ 
+    /* Table - Professional Blue Accent */
+    table.blue-table {
+      width:100%;
+      border-collapse: collapse;
+      font-size:0.95rem;
+    }
+    table.blue-table thead th {
+      background: linear-gradient(90deg,var(--royal),var(--navy));
+      color: #fff;
+      font-weight:700;
+      padding:12px 14px;
+      text-align:left;
+      border-bottom: 3px solid rgba(0,0,0,0.05);
+    }
+    table.blue-table tbody tr:nth-child(odd) td {
+      background: linear-gradient(180deg, #fff, #fff);
+    }
+    table.blue-table tbody tr:nth-child(even) td {
+      background: linear-gradient(180deg, rgba(223,244,255,0.6), rgba(255,255,255,0.6));
+    }
+    table.blue-table tbody td {
+      padding:12px 14px;
+      border-bottom: 1px solid rgba(10,61,145,0.04);
+      vertical-align: middle;
+    }
+    table.blue-table tbody tr:hover td {
+      background: linear-gradient(180deg, var(--muted), #fff);
+      transform: translateY(-2px);
+    }
+ 
+    /* Badges, actions */
+    .badge-cat {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:8px;
+      background: rgba(94,183,247,0.14);
+      color: var(--navy);
+      border:1px solid rgba(10,61,145,0.06);
+      font-weight:600;
+    }
+    .action-btn {
+      padding:6px 10px;
+      border-radius:8px;
+      border:0;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn-edit { background: var(--accent); color: var(--navy); margin-right:8px; }
+    .btn-delete { background: transparent; border:1px solid rgba(7,36,90,0.08); color:var(--navy); }
+ 
+    /* Pagination */
+    .pagination { margin:14px 0 0 0; display:flex; gap:8px; list-style:none; padding:0; }
+    .pagination li { display:inline-block; }
+    .page-link {
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--muted);
+      background: #fff;
+      color: var(--navy);
+      cursor:pointer;
+      font-weight:600;
+      text-decoration:none;
+    }
+    .page-item.active .page-link {
+      background: var(--accent);
+      color: var(--navy);
+      border-color: var(--navy);
+      box-shadow: 0 8px 20px rgba(94,183,247,0.12);
+    }
+ 
+    /* Buttons */
+    .btn-primary-custom {
+      background: var(--royal);
+      border: 1px solid var(--royal);
+      color: #fff;
+      font-weight:700;
+    }
+    .btn-primary-custom:hover { background: var(--navy); border-color:var(--navy); }
+ 
+    /* Responsive */
+    @media(max-width:900px) {
+      table.blue-table thead th:nth-child(4), table.blue-table thead th:nth-child(5) { display:none; }
+      table.blue-table tbody td:nth-child(4), table.blue-table tbody td:nth-child(5) { display:none; }
+      .main { padding:18px; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- Sidebar -->
+  <aside id="sidebar" aria-label="Sidebar">
+    <h4>PharmaCare</h4>
+    <a href="pharmacist-dashboard.html" class="list-group-item list-group-item-action nav-link">Dashboard</a>
+    <a href="medicines.html" class="list-group-item list-group-item-action nav-link">Medicines</a>
+    <a href="prescriptions.html" class="list-group-item list-group-item-action nav-link">Prescriptions</a>
+    <a href="support.html" class="list-group-item list-group-item-action nav-link">Support</a>
+    <a href="profile.html" class="list-group-item list-group-item-action nav-link">Profile</a>
+  </aside>
+ 
+  <!-- Main -->
+  <main class="main" role="main">
+    <div class="d-flex align-items-start justify-content-between mb-3">
+      <div>
+        <h2 class="page-title">Medicines</h2>
+        <!-- <div class="text-muted" style="color:rgba(7,36,90,0.6)">Professional admin view — add, edit, delete and browse.</div> -->
+      </div>
+      <div>
+        <button class="btn btn-primary-custom" id="btnAdd" onclick="openAdd()">+ Add Medicine</button>
+      </div>
+    </div>
+ 
+    <section class="panel">
+      <div style="overflow:auto">
+        <table class="blue-table" id="medTable" aria-describedby="medicine-list">
+          <thead>
+            <tr>
+              <th style="width:70px">ID</th>
+              <th>Name</th>
+              <th style="width:160px">Category</th>
+              <th style="width:120px; text-align:right">Price (₹)</th>
+              <th style="width:90px; text-align:right">Stock</th>
+              <th style="width:150px">Expiry</th>
+              <th style="width:160px; text-align:center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="medTbody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+ 
+      <!-- Pagination -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination" id="pagination"></ul>
+      </nav>
+    </section>
+  </main>
+ 
+  <!-- Modal -->
+  <div class="modal fade" id="medicineModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded">
+        <form id="medicineForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Add Medicine</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="medId">
+            <div class="mb-3">
+              <label class="form-label">Medicine Name</label>
+              <input id="medName" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Category</label>
+              <select id="medCategory" class="form-select" required>
+                <option>Tablet</option>
+                <option>Syrup</option>
+                <option>Injection</option>
+              </select>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label class="form-label">Price</label>
+                  <input id="medPrice" type="number" step="0.01" class="form-control" required>
+                </div>
+              </div>
+              <div class="col">
+                <div class="mb-3">
+                  <label class="form-label">Stock</label>
+                  <input id="medStock" type="number" class="form-control" required>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Expiry</label>
+              <input id="medExpiry" type="date" class="form-control" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary-custom">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ 
+  <script>
+    // Sample data
+    const SAMPLE = [
+      { id:1, name:'Paracetamol', category:'Tablet', price:24.50, stock:120, expiry:'2026-03-15' },
+      { id:2, name:'Cough Syrup', category:'Syrup', price:89.00, stock:45, expiry:'2025-11-02' },
+      { id:3, name:'Amoxicillin', category:'Tablet', price:149.99, stock:80, expiry:'2027-01-20' },
+      { id:4, name:'Vitamin B12', category:'Injection', price:220.00, stock:30, expiry:'2025-08-05' },
+      { id:5, name:'Antacid', category:'Syrup', price:75.00, stock:60, expiry:'2026-06-12' },
+      { id:6, name:'Ibuprofen', category:'Tablet', price:59.00, stock:95, expiry:'2026-12-31' },
+      { id:7, name:'Saline', category:'Injection', price:199.00, stock:25, expiry:'2025-04-10' },
+      { id:8, name:'Cetirizine', category:'Tablet', price:39.50, stock:140, expiry:'2027-09-09' },
+      { id:9, name:'ORS', category:'Syrup', price:49.00, stock:75, expiry:'2025-12-01' },
+      { id:10, name:'Insulin', category:'Injection', price:480.00, stock:20, expiry:'2025-03-30' },
+      { id:11, name:'Azithromycin', category:'Tablet', price:210.00, stock:42, expiry:'2026-10-10' },
+      { id:12, name:'Cefixime', category:'Tablet', price:189.00, stock:38, expiry:'2026-05-15' },
+      { id:13, name:'Calcium Syrup', category:'Syrup', price:115.00, stock:58, expiry:'2026-07-22' }
+    ];
+ 
+    // State & config
+    const PAGE_SIZE = 6;
+    let medicines = [];
+    let currentPage = 1;
+ 
+    // Utils
+    const fmtPrice = v => (Number(v)||0).toFixed(2);
+    const fmtDate = iso => {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString(undefined,{ day:'2-digit', month:'short', year:'numeric' });
+    };
+ 
+    // Render functions
+    function renderTable(page=1) {
+      const tbody = document.getElementById('medTbody');
+      tbody.innerHTML = '';
+ 
+      const start = (page-1)*PAGE_SIZE;
+      const items = medicines.slice(start, start+PAGE_SIZE);
+ 
+      if (items.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 7;
+        td.style.textAlign = 'center';
+        td.style.padding = '20px';
+        td.textContent = 'No medicines available.';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+ 
+      items.forEach(m => {
+        const tr = document.createElement('tr');
+ 
+        tr.innerHTML = `
+          <td>${m.id}</td>
+          <td>${escapeHtml(m.name)}</td>
+          <td><span class="badge-cat">${escapeHtml(m.category)}</span></td>
+          <td style="text-align:right">${fmtPrice(m.price)}</td>
+          <td style="text-align:right">${m.stock}</td>
+          <td>${fmtDate(m.expiry)}</td>
+          <td style="text-align:center">
+            <button class="action-btn btn-edit" onclick="onEdit(${m.id})">Edit</button>
+            <button class="action-btn btn-delete" onclick="onDelete(${m.id})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+ 
+    function renderPagination() {
+      const wrap = document.getElementById('pagination');
+      wrap.innerHTML = '';
+      const total = Math.max(1, Math.ceil(medicines.length / PAGE_SIZE));
+ 
+      const addItem = (label, page, active=false, disabled=false) => {
+        const li = document.createElement('li');
+        li.className = 'page-item' + (active ? ' active' : '');
+        const a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = '#';
+        a.textContent = label;
+        if (!disabled) {
+          a.addEventListener('click', function(e){ e.preventDefault(); goToPage(page); });
+        } else {
+          a.style.opacity = '0.5'; a.style.pointerEvents = 'none';
+        }
+        li.appendChild(a);
+        wrap.appendChild(li);
+      };
+ 
+      // Prev
+      addItem('Prev', Math.max(1, currentPage-1), false, currentPage===1);
+ 
+      // page numbers (windowed)
+      const maxButtons = 7;
+      let start = 1, end = total;
+      if (total > maxButtons) {
+        const half = Math.floor(maxButtons/2);
+        start = Math.max(1, currentPage - half);
+        end = start + maxButtons - 1;
+        if (end > total) { end = total; start = end - maxButtons + 1; }
+      }
+      for (let p=start; p<=end; p++) addItem(p, p, p===currentPage, false);
+ 
+      // Next
+      addItem('Next', Math.min(total, currentPage+1), false, currentPage===total);
+    }
+ 
+    function goToPage(p) {
+      const total = Math.max(1, Math.ceil(medicines.length / PAGE_SIZE));
+      if (p < 1) p = 1;
+      if (p > total) p = total;
+      currentPage = p;
+      renderTable(currentPage);
+      renderPagination();
+      document.getElementById('medTable').scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+ 
+    // CRUD
+    function openAdd(){
+      document.getElementById('modalTitle').textContent = 'Add Medicine';
+      document.getElementById('medId').value = '';
+      document.getElementById('medicineForm').reset();
+      new bootstrap.Modal(document.getElementById('medicineModal')).show();
+    }
+ 
+    function onEdit(id){
+      const item = medicines.find(x => x.id === id);
+      if(!item) return;
+      document.getElementById('modalTitle').textContent = 'Edit Medicine';
+      document.getElementById('medId').value = item.id;
+      document.getElementById('medName').value = item.name;
+      document.getElementById('medCategory').value = item.category;
+      document.getElementById('medPrice').value = item.price;
+      document.getElementById('medStock').value = item.stock;
+      document.getElementById('medExpiry').value = item.expiry;
+      new bootstrap.Modal(document.getElementById('medicineModal')).show();
+    }
+ 
+    function onDelete(id){
+      if (!confirm('Delete this medicine?')) return;
+      medicines = medicines.filter(x => x.id !== id);
+      const totalPages = Math.max(1, Math.ceil(medicines.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      renderTable(currentPage);
+      renderPagination();
+    }
+ 
+    document.getElementById('medicineForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const idVal = document.getElementById('medId').value;
+      const payload = {
+        id: idVal ? Number(idVal) : generateId(),
+        name: document.getElementById('medName').value.trim(),
+        category: document.getElementById('medCategory').value,
+        price: Number(document.getElementById('medPrice').value),
+        stock: Number(document.getElementById('medStock').value),
+        expiry: document.getElementById('medExpiry').value
+      };
+      if (!payload.name || !payload.expiry || isNaN(payload.price) || isNaN(payload.stock)) {
+        alert('Please fill all fields correctly.');
+        return;
+      }
+      if (idVal) {
+        const idx = medicines.findIndex(x => x.id === payload.id);
+        if (idx !== -1) medicines[idx] = payload;
+      } else {
+        medicines.unshift(payload);
+      }
+      bootstrap.Modal.getInstance(document.getElementById('medicineModal'))?.hide();
+      currentPage = 1;
+      renderTable(currentPage);
+      renderPagination();
+    });
+ 
+    function generateId(){
+      return medicines.reduce((m,x)=>Math.max(m,Number(x.id)||0),0) + 1;
+    }
+ 
+    // small escape
+    function escapeHtml(s){
+      if (typeof s !== 'string') return s;
+      return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+ 
+    // init
+    function init(){
+      medicines = SAMPLE.map(x => ({...x}));
+      currentPage = 1;
+      renderTable(currentPage);
+      renderPagination();
+    }
+  
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+ 
+</body>
+</html>
+ 

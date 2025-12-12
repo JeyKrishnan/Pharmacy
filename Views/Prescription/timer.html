@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy - Processing Order</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light timer-page">
+    <!-- Navbar -->
+    <div class="flex-grow-1">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm" style="margin-right: 0px;">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+    <span class="text-white fw-bold" style="font-size:22px;">Pharmacy System</span>
+    <button type="button" class="btn btn-outline-warning">Log Out</button>
+</div>
+
+    </nav>
+
+       <!-- <div id="blurredMedicinesList" class="medicines-background"></div>
+    <div id="blurredMedicinesList"></div> -->
+ 
+    <!-- Timer Card (On Top) -->
+    <div class="container vh-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-lg-6">
+            <div class="card shadow-lg border-0 timer-card">
+                <div class="card-header bg-gradient text-success text-center">
+                    <h4 class="mb-0"><i class="bi bi-hourglass-split"></i> Processing Your Prescription</h4>
+                </div>
+                <div class="card-body text-center py-5">
+                    <p class="text-muted mb-4">Your prescription is being verified. Please wait...</p>
+
+                    <!-- Countdown Timer -->
+                    <table class="table table-bordered" id="userStatusTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            
+                <button class="btn btn-outline-secondary mt-2" onclick="loadUserPrescriptions()">
+                    Refresh Status
+                </button>
+
+                    <div id="messageContainer" class="mt-4">
+                        <p class="text-muted">
+                            <i class="bi bi-check-circle text-success"></i> Prescription uploaded
+                        </p>
+                        <p class="text-muted">
+                            <i class="bi bi-hourglass-split text-warning"></i> Verifying with pharmacy...
+                        </p>
+                    </div>
+
+                    <button type="button" class="btn btn-outline-danger mt-4" id="cancelBtn">
+                        Cancel Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+ 
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="script_timer.js"></script>
+    
+</body>
+</html>

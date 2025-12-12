@@ -1,0 +1,415 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* Global Styles */
+:root {
+    --royal-dark: #002366;
+    --royal: #4169e1;
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-bg: #f8f9fa;
+    --border-color: #dee2e6;
+}
+ 
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg);
+}
+ 
+/* Navbar Styles */
+ 
+.custom-navbar .container-fluid {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+ 
+ 
+ 
+ 
+.navbar-brand {
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+}
+ 
+/* Card Styles */
+.card {
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+ 
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+ 
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1.25rem;
+    font-weight: 600;
+}
+ 
+/* Medicine Card Styles */
+.medicine-card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+ 
+.medicine-card:hover {
+    background: #f8f9fa;
+    border-left-color: var(--success-color);
+}
+ 
+.medicine-icon {
+    font-size: 2rem;
+    text-align: center;
+    background: #f0f0f0;
+    padding: 0.5rem;
+    border-radius: 8px;
+    min-width: 60px;
+}
+ 
+/* Form Styles */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1.5px solid var(--border-color);
+    padding: 0.625rem 0.875rem;
+    transition: border-color 0.3s ease;
+}
+ 
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+}
+ 
+.form-label {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+ 
+/* Button Styles */
+.btn {
+    border-radius: 8px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+ 
+.btn-primary, .btn-success {
+    border: none;
+}
+ 
+.btn-primary:hover, .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+ 
+.btn-outline-danger:hover {
+    transform: scale(1.05);
+}
+ 
+/* Timer Page Styles */
+.timer-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+}
+ 
+ 
+/* .medicines-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+    background-color: var(--light-bg);
+    filter: blur(8px) opacity(0.3);
+    pointer-events: none;
+    z-index: 1;
+}
+ 
+.blurred-medicine-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+ 
+#blurredMedicinesList{
+    background-image: url("med_back.jpg");
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    height: 100vh;          
+    width: 100%;                
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;          
+    top: 0;
+    left: 0;
+    z-index: -1;
+} */
+ 
+.medicine-icon {
+    font-size: 2.5rem;
+}
+ 
+.medicine-name {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+ 
+/* Timer Card */
+.timer-card {
+    position: relative;
+    z-index: 10;
+    border-radius: 16px;
+    animation: slideIn 0.5s ease-out;
+}
+ 
+ 
+ 
+ 
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+ 
+.bg-gradient {
+    background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%) !important;
+}
+ 
+/* Timer Display */
+.timer-display {
+    margin: 2rem 0;
+}
+ 
+.timer-number {
+    font-size: 4rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    display: block;
+    animation: pulse 1s infinite;
+}
+ 
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+ 
+/* Progress Bar */
+.progress {
+    border-radius: 8px;
+    background-color: #e9ecef;
+}
+ 
+.progress-bar {
+    transition: width 0.3s linear;
+}
+ 
+/* Alert Styles */
+.alert {
+    border-radius: 8px;
+    border: none;
+}
+ 
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+ 
+/* Sticky Positioning */
+.sticky-top {
+    z-index: 5;
+}
+ 
+/* Responsive Design */
+@media (max-width: 768px) {
+    .medicine-card {
+        padding: 0.75rem;
+    }
+ 
+    .timer-number {
+        font-size: 3rem;
+    }
+ 
+    .medicines-background {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+ 
+    .container-fluid {
+        padding: 1rem;
+    }
+ 
+    .custom-navbar{
+        margin-left:252px;
+        margin-right:0;
+    }
+}
+ 
+@media (max-width: 576px) {
+    .medicine-card .row {
+        flex-wrap: wrap;
+    }
+ 
+    .medicine-card .col-auto {
+        margin-top: 0.5rem;
+    }
+ 
+    .timer-number {
+        font-size: 2.5rem;
+    }
+ 
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    .navbar {
+    margin-left: 0;
+  }
+}
+ 
+/* Utility Classes */
+.text-balance {
+    text-wrap: balance;
+}
+ 
+.shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+ 
+.shadow-lg {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+ 
+/* Hover Effects */
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+ 
+/* Remove button interaction */
+.remove-medicine {
+    transition: all 0.3s ease;
+}
+ 
+.remove-medicine:hover {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+ 
+/* Input validation */
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+}
+ 
+.form-control.is-valid {
+    border-color: var(--success-color);
+}
+ 
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+ 
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+ 
+ 
+ 
+    .sidebar {
+        width: 240px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #0d6efd;
+        color: #fff;
+        padding-top: 20px;
+        transition: 0.3s;
+    }
+ 
+    .sidebar a {
+        display: block;
+        padding: 14px 20px;
+        color: #fff;
+        font-size: 16px;
+        text-decoration: none;
+    }
+ 
+    .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+ 
+    .sidebar-brand {
+        font-size: 22px;
+        font-weight: bold;
+        padding: 0 20px 20px;
+    }
+ 
+    /* Page content push when sidebar is present */
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+ 
+    /* Responsive for mobile */
+    @media (max-width: 768px) {
+        .sidebar {
+            left: -240px;
+        }
+ 
+        .sidebar.active {
+            left: 0;
+        }
+ 
+        .content {
+            margin-left: 0;
+        }
+ 
+        #toggleSidebar {
+            display: block;
+        }
+    }
+ 
+    #toggleSidebar {
+        font-size: 28px;
+        cursor: pointer;
+        margin: 10px;
+        display: none;
+    }
